@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 
+import startReservationExpiryJob from "./jobs/reservationExpiryJob.js";
+
 dotenv.config();
 
 import app from "./app.js";
@@ -10,6 +12,8 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
     try {
         await connectDB();
+
+        startReservationExpiryJob();
 
         app.listen(PORT, () => {
             console.log(
