@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAllEvents } from "../services/eventService";
+import EventCard from "../components/event/EventCard";
 
 function Home() {
     const [events, setEvents] = useState([]);
@@ -26,29 +27,39 @@ function Home() {
         return <h2>Loading Events...</h2>;
     }
 
-    return (
-        <div>
-            <h1>Available Events</h1>
+return (
 
+    <div>
+
+        <h1
+            className="
+                text-4xl
+                font-bold
+                mb-8
+            "
+        >
+            Available Events
+        </h1>
+
+        <div
+            className="
+                grid
+                md:grid-cols-2
+                lg:grid-cols-3
+                gap-6
+            "
+        >
             {events.map((event) => (
-                <div key={event._id}>
-                    <h2>{event.name}</h2>
-
-                    <p>
-                        Venue: {event.venue}
-                    </p>
-
-                    <p>
-                        Seats:
-                        {" "}
-                        {event.totalSeats}
-                    </p>
-
-                    <hr />
-                </div>
+                <EventCard
+                    key={event._id}
+                    event={event}
+                />
             ))}
         </div>
-    );
+
+    </div>
+
+);
 }
 
 export default Home;
