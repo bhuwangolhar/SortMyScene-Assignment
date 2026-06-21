@@ -1,4 +1,4 @@
-import EventCard from "./event/EventCard";
+import EventCard from "./EventCard";
 
 function EventList({
     events,
