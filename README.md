@@ -29,6 +29,11 @@ A full-stack event ticket booking platform that lets users browse events, select
 - MongoDB
 - Mongoose
 
+**Backend**
+- Render (Backend)
+- Vercel (Frontend)
+- MongoDB Atlas (Database)
+
 ## Project Architecture
 
 ```
@@ -138,8 +143,12 @@ SortMyScene-Assignment/
 │       └── utils/
 │           └── constants.js
 │
-└── image-assets/
-```
+└── image-assets/    
+    ├── home1.png
+    ├── home2.png
+    ├── events.png
+    ├── eventdetails.png
+    └── ticketinfo.png```
 
 ## API Endpoints
 
@@ -265,14 +274,14 @@ Video Walkthrough: [Add Google Drive Link Here]
 
 ## Live Demo
 
-Deployment Link: [Add Deployment Link Here]
+Deployment Link: https://sortmyscene.bhuvangolhar.space
 
 ## Local Setup Instructions
 
 **Clone Repository**
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/bhuwangolhar/SortMyScene-Assignment
 cd SortMyScene
 ```
 
@@ -297,6 +306,8 @@ npm run dev
 ```
 
 Seed Database
+
+To clear all the existing data
 
 ```bash
 npm run seed
@@ -332,3 +343,4 @@ npm run dev
 ## Author
 
 **Name:** Bhuvan Golhar
+**LinkedIn:** https://www.linkedin.com/in/bhuvangolhar
