@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { getEventById } from "../services/eventService";
-import { reserveSeats } from "../services/reservationService";
+import { reserveSeats, cancelReservation } from "../services/reservationService";
 import { confirmBooking } from "../services/bookingService";
 import SeatGrid from "../components/booking/SeatGrid";
 
@@ -154,8 +154,21 @@ function EventDetails() {
                 throw new Error("Reservation was created but no reservation ID was returned.");
             }
 
+            // Optimistic UI update: immediately mark selected seats as reserved
+            setEventData((prevData) => ({
+                ...prevData,
+                seats: prevData.seats.map((seat) =>
+                    selectedSeats.includes(seat.seatNumber)
+                        ? { ...seat, status: "reserved" }
+                        : seat
+                ),
+            }));
+
             setReservation(data.reservation);
             setSuccessMessage(data.message || "Seats reserved successfully!");
+            setSelectedSeats([]);
+            
+            // Fetch fresh data from server to ensure consistency
             await fetchEventDetails();
         } catch (error) {
             setErrorMessage(error.message || "Failed to reserve seats");
@@ -176,12 +189,71 @@ function EventDetails() {
 
         try {
             const data = await confirmBooking(reservation._id);
+            
+            // Optimistic UI update: immediately mark reserved seats as booked
+            setEventData((prevData) => ({
+                ...prevData,
+                seats: prevData.seats.map((seat) =>
+                    seat.status === "reserved"
+                        ? { ...seat, status: "booked" }
+                        : seat
+                ),
+            }));
+            
             setSuccessMessage(data.message || "Booking confirmed successfully!");
             setSelectedSeats([]);
             setReservation(null);
+            
+            // Fetch fresh data from server to ensure consistency
             await fetchEventDetails();
         } catch (error) {
             setErrorMessage(error.message || "Failed to confirm booking");
+        } finally {
+            setActionLoading(false);
+        }
+    };
+
+    const handleCancelReservation = async () => {
+        if (!reservation?._id) {
+            setErrorMessage("No active reservation found.");
+            return;
+        }
+
+        setActionLoading(true);
+        setSuccessMessage("");
+        setErrorMessage("");
+
+        try {
+            console.log("Cancelling reservation:", {
+                reservationId: reservation._id,
+                eventId: eventId,
+                reservationObject: reservation
+            });
+            
+            const data = await cancelReservation(
+                reservation._id,
+                eventId
+            );
+
+            // Optimistic UI update: immediately mark reserved seats as available
+            setEventData((prevData) => ({
+                ...prevData,
+                seats: prevData.seats.map((seat) =>
+                    seat.status === "reserved"
+                        ? { ...seat, status: "available" }
+                        : seat
+                ),
+            }));
+
+            setSuccessMessage(data.message || "Reservation cancelled successfully!");
+            setSelectedSeats([]);
+            setReservation(null);
+
+            // Fetch fresh data from server to ensure consistency
+            await fetchEventDetails();
+        } catch (error) {
+            console.error("Cancel reservation error:", error);
+            setErrorMessage(error.message || "Failed to cancel reservation");
         } finally {
             setActionLoading(false);
         }
@@ -474,6 +546,17 @@ function EventDetails() {
                                 className="mt-4 w-full rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
                             >
                                 {actionLoading ? "Confirming..." : "Confirm Booking"}
+                            </button>
+                        )}
+
+                        {reservation && (
+                            <button
+                                type="button"
+                                onClick={handleCancelReservation}
+                                disabled={actionLoading}
+                                className="mt-2 w-full rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2"
+                            >
+                                {actionLoading ? "Cancelling..." : "Cancel Reservation"}
                             </button>
                         )}
                     </aside>

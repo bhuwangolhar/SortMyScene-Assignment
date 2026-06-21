@@ -43,3 +43,44 @@ try {
 }
 
 };
+
+export const cancelReservation = async (
+    reservationId,
+    eventId
+) => {
+    try {
+        console.log("cancelReservation called with:", {
+            reservationId,
+            eventId,
+            endpoint: "/reserve"
+        });
+
+        if (!reservationId || !eventId) {
+            throw new Error("reservationId and eventId are required");
+        }
+
+        const response = await api.delete(
+            "/reserve",
+            {
+                data: {
+                    reservationId,
+                    eventId,
+                },
+            }
+        );
+
+        console.log("Cancel reservation response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Cancel reservation error:", {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
+        throw new Error(
+            error.response?.data?.message ||
+            error.message ||
+            "Failed to cancel reservation"
+        );
+    }
+};
