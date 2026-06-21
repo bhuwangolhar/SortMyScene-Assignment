@@ -1,5 +1,6 @@
 import Reservation from "../models/reservation.model.js";
 import Seat from "../models/seat.model.js";
+import Booking from "../models/booking.model.js";
 
 export const confirmBookingService = async (
     reservationId
@@ -41,6 +42,13 @@ export const confirmBookingService = async (
             },
         }
     );
+
+    // Create booking record to track which user booked the seats
+    await Booking.create({
+        userId: reservation.userId,
+        eventId: reservation.eventId,
+        seatNumbers: reservation.seatNumbers,
+    });
 
     await Reservation.findByIdAndDelete(
         reservationId

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { getEventById } from "../services/eventService";
 import { reserveSeats } from "../services/reservationService";
@@ -83,6 +83,7 @@ function SeatChipList({ title, seatNumbers, tone, emptyMessage }) {
 
 function EventDetails() {
     const { eventId } = useParams();
+    const navigate = useNavigate();
 
     const [eventData, setEventData] = useState(null);
     const [selectedSeats, setSelectedSeats] = useState([]);
@@ -258,6 +259,19 @@ function EventDetails() {
 
     return (
         <div className="min-h-screen bg-zinc-50">
+            {/* Back Button */}
+            <div className="mx-auto w-full px-4 py-4 sm:px-6 lg:px-8">
+                <button
+                    onClick={() => navigate("/events")}
+                    className="inline-flex items-center gap-2 text-violet-600 hover:text-violet-700 font-medium transition-colors"
+                >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Back to Events
+                </button>
+            </div>
+
             <div className="mx-auto w-full px-4 py-8 sm:px-6 lg:px-8">
                 {/* Hero */}
                 <header className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm sm:p-8">

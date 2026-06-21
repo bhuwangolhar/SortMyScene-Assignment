@@ -6,7 +6,7 @@ function EventCard({ event }) {
 
         <div
             className="
-                bg-white
+                bg-zinc-100
                 rounded-xl
                 shadow-sm
                 border
