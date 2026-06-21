@@ -270,7 +270,7 @@ curl http://localhost:5000/api/bookings?userId=demo-user
 
 ## Video Demonstration
 
-Video Walkthrough: [Add Google Drive Link Here]
+Video Walkthrough: https://drive.google.com/file/d/1d07yZOKkAHZqq5cqvDMIFEyziDAQyd2a/view?usp=drivesdk
 
 ## Live Demo
 
@@ -305,9 +305,7 @@ Run backend
 npm run dev
 ```
 
-Seed Database
-
-To clear all the existing data
+Seed Database (To clear all the existing data)
 
 ```bash
 npm run seed
@@ -343,4 +341,5 @@ npm run dev
 ## Author
 
 **Name:** Bhuvan Golhar
+
 **LinkedIn:** https://www.linkedin.com/in/bhuvangolhar
